@@ -1,12 +1,27 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 
+app.use(bodyParser.urlencoded({ extended : false}));
+app.use(bodyParser.json());
 // const PORT = 3000;
 
-// app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');
 
+const notes = [
+
+    {
+        City : 'Kenya',
+        Notes : 'I travelled all over Nairobi and visited Uhuru Kenyatta Univ ',
+        Plans : 'I want to go back there once again'
+    }
+];
+
+app.get('/note', (req, res)=> {
+    res.json(notes);
+})
 
 app.get('/', function(req,res) {
     res.sendFile(path.join(__dirname, "./views/index.html"));
@@ -24,7 +39,7 @@ app.get('/', function(req,res) {
 
 app.get('/blog/create', (req,res)=>{
     res.sendFile(path.join(__dirname, "./views/blog.html"));
-    // res.render('blog');
+    res.render('blog', { title : 'Home'});
 });
 
 // app.get('/about', function(req,res) {
@@ -40,9 +55,14 @@ app.use((req,res) => {
     // res.status(404).render('404');
 })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
+const ENV = process.env.NODE_ENV || 'Development';
 
-app.listen(PORT, () => {
-    console.log("Listening to Port...")
-});
+// ps aux | grep node
+
+app.listen(PORT, (err) => {
+    if (err) console.error('❌ Unable to connect the server: ', err);
+    console.log(`🌍 Server listening on port ${PORT} - ${ENV} environment`);
+  });
+// });
 
